@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lompat Tali - Game Tradisional</title>
+<style>
+:root{--purple:#7654c8;--light:#a58be5;--pale:#f3efff;--ink:#35266d}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(140deg,#faf7ff,#eee7ff);min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(16px,4vw,48px);background:#ffffffc9;border-bottom:1px solid #e4d9ff;position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+.brand{font-size:clamp(20px,3vw,30px);font-weight:900;color:var(--purple)}.brand span{margin-right:8px}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav a{color:var(--ink);text-decoration:none;font-weight:700;padding:9px 14px;border-radius:22px}nav a:hover{background:#e5dbff}
+main{max-width:1400px;margin:26px auto;padding:0 20px;display:grid;grid-template-columns:minmax(0,2.1fr) minmax(270px,.8fr);gap:20px}
+.game{position:relative;overflow:hidden;border-radius:24px;min-height:570px;background:linear-gradient(#76c6ff 0 52%,#b7e6a2 52% 70%,#f5c4a7 70%);box-shadow:0 12px 32px #5b41941a;border:1px solid white}
+.cloud{position:absolute;background:#fff9;border-radius:100px;width:150px;height:40px;top:100px;left:8%;filter:blur(1px)}.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;width:65px;height:65px;top:-27px;left:22px}.cloud:after{left:70px;top:-17px;width:52px;height:52px}
+.cloud.c2{left:auto;right:9%;top:150px;transform:scale(.75)}
+.trees{position:absolute;bottom:29%;left:0;right:0;height:130px;background:radial-gradient(ellipse at 10% 80%,#6cb875 0 12%,transparent 13%),radial-gradient(ellipse at 20% 65%,#4b9f67 0 14%,transparent 15%),radial-gradient(ellipse at 82% 75%,#6cb875 0 13%,transparent 14%),radial-gradient(ellipse at 93% 62%,#4b9f67 0 17%,transparent 18%)}
+.ground{position:absolute;bottom:0;left:0;right:0;height:31%;background:repeating-linear-gradient(170deg,#f9d0b5 0 32px,#f6c3a4 33px 35px);border-top:8px solid #fff5}
+.stats{position:absolute;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;gap:8px;z-index:2;flex-wrap:wrap}
+.stat{background:#7654c8eF;color:white;padding:10px 15px;border-radius:16px;font-weight:800;box-shadow:0 4px 0 #5636a0;font-size:15px}
+.center{position:absolute;inset:90px 15px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+h1{font-size:clamp(35px,6vw,65px);line-height:1;margin:0 0 10px;color:white;text-shadow:3px 4px 0 #7654c8,0 3px 14px #6543a7}
+.subtitle{background:#7654c8;color:#fff;border:2px solid white;border-radius:22px;padding:8px 16px;font-weight:700}
+.player{font-size:clamp(90px,15vw,150px);line-height:1.3;filter:drop-shadow(0 8px 0 #6e459933);transform:translateY(0)}
+.player.jumping{animation:jump .42s ease-in-out}
+@keyframes jump{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-90px) rotate(-8deg)}}
+.rope{font-size:42px;letter-spacing:12px;height:35px;color:#5930a8;transform:rotate(-5deg);margin-top:-10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px}
+button{border:0;border-radius:30px;background:linear-gradient(135deg,#8b68e7,#6843c4);color:white;font-size:17px;font-weight:800;padding:14px 24px;box-shadow:0 5px 0 #4f329c;cursor:pointer;touch-action:manipulation}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #4f329c}button.secondary{background:white;color:var(--purple);border:2px solid #d9ccff;box-shadow:none}
+.side{background:#ffffffb8;border:2px solid #e5dcff;border-radius:24px;padding:24px;box-shadow:0 12px 32px #5b41940d}
+.side h2{margin:0 0 18px;color:var(--purple);font-size:24px}.step{display:flex;gap:12px;margin:16px 0;line-height:1.45}.num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--purple);color:white;display:grid;place-items:center;font-weight:800}
+.tip{margin-top:24px;padding:18px;border-radius:18px;background:var(--pale);line-height:1.55}.tip b{color:var(--purple)}
+#message{min-height:25px;font-weight:800;color:#5b3ab0;margin-top:10px}
+footer{text-align:center;padding:24px 12px;color:#8166c8;font-weight:600}
+@media(max-width:850px){main{grid-template-columns:1fr;margin:16px auto;padding:0 12px}.game{min-height:530px}.side{padding:20px}header{align-items:flex-start;flex-direction:column}.stats{left:10px;right:10px;top:10px}.stat{font-size:13px;padding:8px 10px}.center{inset:100px 10px 15px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span>🎮</span>Lompat Tali</div>
+  <nav><a href="#game">Beranda</a><a href="#cara">Cara Main</a><a href="#tentang">Tentang</a></nav>
+</header>
+<main>
+<section class="game" id="game" aria-label="Area permainan">
+  <div class="cloud"></div><div class="cloud c2"></div><div class="trees"></div><div class="ground"></div>
+  <div class="stats">
+    <div class="stat">🏆 Skor: <span id="score">0</span></div>
+    <div class="stat">⏱️ Waktu: <span id="time">30</span></div>
+    <div class="stat">💗 Nyawa: <span id="lives">3</span></div>
+  </div>
+  <div class="center">
+    <h1 id="headline">Lompat Tali</h1>
+    <div class="subtitle">Ayo lompat dan kumpulkan skor!</div>
+    <div class="player" id="player" aria-label="Karakter melompat">🏃🏻‍♀️</div>
+    <div class="rope">〰️〰️〰️</div>
+    <div class="actions">
+      <button id="startBtn">▶ Mulai Game</button>
+      <button id="jumpBtn" class="secondary" disabled>⬆ Lompat!</button>
+    </div>
+    <div id="message" role="status">Tekan “Mulai Game” untuk bermain.</div>
+  </div>
+</section>
+<aside class="side" id="cara">
+  <h2>🎮 Cara Bermain</h2>
+  <div class="step"><div class="num">1</div><div>Klik tombol <b>Mulai Game</b>.</div></div>
+  <div class="step"><div class="num">2</div><div>Tekan tombol <b>Lompat!</b> atau tombol <b>Spasi</b> pada keyboard.</div></div>
+  <div class="step"><div class="num">3</div><div>Dapatkan skor dengan melompat pada waktu yang tepat.</div></div>
+  <div class="step"><div class="num">4</div><div>Kamu punya 30 detik dan 3 nyawa. Jangan sampai terlambat melompat!</div></div>
+  <div class="tip" id="tentang"><b>💡 Yuk, jangan lupa!</b><br>Game ini mengenalkan permainan tradisional lompat tali sekaligus melatih fokus, ketangkasan, dan koordinasi. Tetap aktif dan bersenang-senang!</div>
+</aside>
+</main>
+<footer>Game tradisional untuk hiburan dan edukasi • Selamat bermain! 💜</footer>
+<script>
+const scoreEl=document.getElementById('score'),timeEl=document.getElementById('time'),livesEl=document.getElementById('lives');
+const player=document.getElementById('player'),message=document.getElementById('message'),startBtn=document.getElementById('startBtn'),jumpBtn=document.getElementById('jumpBtn'),headline=document.getElementById('headline');
+let score=0,time=30,lives=3,running=false,timer=null,roundTimer=null,needsJump=false,round=0;
+function update(){scoreEl.textContent=score;timeEl.textContent=time;livesEl.textContent='💗'.repeat(lives)||'0';}
+function stopGame(text){
+ running=false;clearInterval(timer);clearTimeout(roundTimer);timer=null;roundTimer=null;
+ jumpBtn.disabled=true;startBtn.disabled=false;startBtn.textContent='↻ Main Lagi';headline.textContent='Permainan Selesai!';
+ message.textContent=text+' Skor akhir: '+score+'.';}
+function newRound(){
+ if(!running)return;
+ round++;needsJump=true;message.textContent='Bersiap... lompat sekarang!';player.style.filter='drop-shadow(0 8px 0 #6e459933)';
+ roundTimer=setTimeout(()=>{
+  if(!running)return;
+  if(needsJump){lives--;update();message.textContent='Ups, terlambat! Coba lagi 💪';}
+  needsJump=false;
+  if(lives<=0){stopGame('Nyawamu habis. Tetap semangat!');return;}
+  roundTimer=setTimeout(newRound,500);
+ },1000+Math.random()*900);
+}
+function startGame(){
+ clearInterval(timer);clearTimeout(roundTimer);score=0;time=30;lives=3;round=0;running=true;needsJump=false;
+ headline.textContent='Lompat Tali';startBtn.disabled=true;jumpBtn.disabled=false;startBtn.textContent='▶ Mulai Game';message.textContent='Siap? Tekan Lompat saat diminta!';update();
+ timer=setInterval(()=>{time--;update();if(time<=0)stopGame('Waktu habis! Hebat, kamu sudah mencoba.');},1000);
+ newRound();
+}
+function jump(){
+ if(!running)return;
+ player.classList.remove('jumping');void player.offsetWidth;player.classList.add('jumping');
+ if(needsJump){score+=10;needsJump=false;update();message.textContent='Mantap! +10 poin ✨';clearTimeout(roundTimer);roundTimer=setTimeout(newRound,450);}
+ else{message.textContent='Lompatan bagus! Tunggu aba-aba berikutnya.';}
+}
+startBtn.addEventListener('click',startGame);jumpBtn.addEventListener('click',jump);
+document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();if(running)jump();}});
+</script>
+</body>
+</html>
